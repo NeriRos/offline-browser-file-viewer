@@ -1,3 +1,7 @@
+import {Files} from "@features/Files";
+
 export const Home = () => {
-    return <>GHOME</>
+    return <div>
+        <Files />
+    </div>
 }
