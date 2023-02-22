@@ -1,4 +1,4 @@
-import {Files} from "@features/Files";
+import {Files} from "@components/Files";
 
 export const Home = () => {
     return <div>

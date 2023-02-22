@@ -1,3 +1,11 @@
-import {filesApiHandler} from "@features/Files/api/files";
+import {listFiles} from "@core/file-system";
 
-export default filesApiHandler;
+function filesApiHandler(req, res) {
+    if (req.method === "GET") {
+        const files = listFiles()
+
+        return res.json({files})
+    }
+}
+
+export default filesApiHandler

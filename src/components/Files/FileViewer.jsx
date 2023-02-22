@@ -1,8 +1,9 @@
 import {Spin} from "antd";
-import {EmbedViewer} from "@features/Files/components/file-types/EmbedViewer";
+
 import {useCallback, useEffect, useState} from "react";
-import {getFile} from "@features/Files/lib/files-service";
 import dynamic from 'next/dynamic';
+import {EmbedViewer} from "@components/Files/file-types/EmbedViewer";
+import {getFile} from "@lib/files-service";
 
 const Viewer = dynamic(() => import('react-file-viewer'), {
     ssr: false
@@ -26,11 +27,11 @@ export const FileViewers = ({file}) => {
         return <Spin/>
 
     switch (fileObject.extension) {
+        case "html":
         case "pdf":
             return <EmbedViewer file={fileObject}/>
         default:
             return <FileDisplay file={fileObject}/>
-        // return <Typography.Text>File type not supported</Typography.Text>
     }
 }
 

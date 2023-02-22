@@ -1,9 +1,9 @@
 import {Col, Row, Spin} from "antd";
 import {useCallback, useEffect, useState} from "react";
-import {FileList} from "@features/Files/components/FileList";
-import {getFilesList} from "@features/Files/lib/files-service";
 import {hash} from "@core/helpers";
-import {FileViewers} from "@features/Files/components/FileViewer";
+import {getFilesList} from "@lib/files-service";
+import {FileList} from "@components/Files/FileList";
+import {FileViewers} from "@components/Files/FileViewer";
 
 export const Files = () => {
     const [files, setFiles] = useState()
