@@ -1,29 +1,28 @@
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 
 import {Input, Tree} from 'antd';
 
 const {Search} = Input;
 
-export const FileList = ({files = []}) => {
+export const FileList = ({onSelect, files = []}) => {
     const [expandedKeys, setExpandedKeys] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [autoExpandParent, setAutoExpandParent] = useState(true);
 
-    const dataList = useMemo(() => [], [])
-
-    useEffect(() => {
-        const generateList = (data) => {
-            for (let i = 0; i < data?.length; i++) {
-                const node = data[i]
-                dataList.push(node)
-                if (node.children) {
-                    generateList(node.children)
-                }
+    const generateList = useCallback((data, result = []) => {
+        for (let i = 0; i < data?.length; i++) {
+            const node = data[i]
+            result.push(node)
+            if (node.children) {
+                return generateList(node.children, result)
             }
         }
+        return result
+    }, [])
 
-        generateList(files)
-    }, [files, dataList])
+    const dataList = useMemo(() => {
+        return generateList(files);
+    }, [files, generateList])
 
     const onExpand = (newExpandedKeys) => {
         setExpandedKeys(newExpandedKeys);
@@ -93,6 +92,9 @@ export const FileList = ({files = []}) => {
             onChange={onChange}
         />
         <Tree
+            onSelect={(selectedKeys) => {
+                onSelect?.(dataList.filter(item => selectedKeys.indexOf(item.key) !== -1))
+            }}
             onExpand={onExpand}
             expandedKeys={expandedKeys}
             autoExpandParent={autoExpandParent}

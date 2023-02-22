@@ -2,35 +2,29 @@ import {Col, Row, Spin} from "antd";
 import {useCallback, useEffect, useState} from "react";
 import {FileList} from "@features/Files/components/FileList";
 import {getFilesList} from "@features/Files/lib/files-service";
+import {hash} from "@core/helpers";
+import {FileViewers} from "@features/Files/components/FileViewer";
 
 export const Files = () => {
-    const hash = function (text) {
-        var hash = 0,
-            i, chr;
-        if (text.length === 0) return hash;
-        for (i = 0; i < text.length; i++) {
-            chr = text.charCodeAt(i);
-            hash = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
-        }
-        return hash;
-    };
+    const [files, setFiles] = useState()
 
     const formatFilesList = useCallback((files) => {
         const loop = (data, parentKey) => {
             return data.map((item) => {
-                const title = item.name;
-                const key = hash(`${parentKey}-${item.name}`);
+                const fileData = {
+                    title: item.name,
+                    path: item.path,
+                    key: hash(`${parentKey}-${item.name}`),
+                    extension: item.name.substring(item.name.lastIndexOf('.') + 1).toLowerCase(),
+                }
 
                 if (item.children) {
                     return {
-                        title, key, children: loop(item.children, key),
+                        ...fileData, children: loop(item.children, fileData.key),
                     };
                 }
 
-                return {
-                    title, key,
-                };
+                return fileData
             })
         }
 
@@ -40,6 +34,7 @@ export const Files = () => {
     const getFiles = useCallback(async () => {
         const filesList = await getFilesList();
         const formattedList = formatFilesList(filesList.files)
+
         setFiles(formattedList)
     }, [formatFilesList])
 
@@ -47,11 +42,18 @@ export const Files = () => {
         getFiles()
     }, [getFiles])
 
-    const [files, setFiles] = useState()
+    const [selected, setSelected] = useState()
 
-    return <Row>
-        <Col>
-            {files ? <FileList files={files}/> : <Spin/>}
+    const onSelect = async (selected) => {
+        setSelected(selected[0])
+    }
+
+    return <Row gutter={20}>
+        <Col span={6}>
+            {files ? <FileList files={files} onSelect={onSelect}/> : <Spin/>}
+        </Col>
+        <Col span={18}>
+            {selected ? <FileViewers file={selected} files={files}/> : null}
         </Col>
     </Row>
 }

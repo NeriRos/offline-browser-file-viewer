@@ -11,9 +11,15 @@
   "dependencies": {
     "antd": "^5.2.2",
     "directory-tree": "^3.5.1",
+    "mammoth": "^1.5.1",
+    "mime-types": "^2.1.35",
     "next": "13.1.6",
+    "pdfjs-dist": "^3.3.122",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-doc-viewer": "^0.1.5",
+    "react-dom": "18.2.0",
+    "react-file-viewer": "^1.2.1",
+    "react-pdf": "^6.2.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
